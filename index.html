@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <a-assets>
+        <a-asset-item id="Bullet" src="assets/Bullet.glb"></a-asset-item>
+        <a-asset-item id="city" src="assets/city.glb"></a-asset-item>
+      </a-assets>
+
+      <!-- Ciel noir -->
+      <a-sky color="#000000"></a-sky>
+
+      <!-- Caméra (libre pour explorer la scène) -->
+      <a-camera position="0 5 30" wasd-controls="true" look-controls="true"></a-camera>
+
+      <!-- Modèle de ville réduit -->
+      <a-entity 
+        gltf-model="#city" 
+        position="0 18 0" 
+        scale="18 18 18">
+      </a-entity>
+
+      <!-- Balle au centre de la ville -->
+      <a-entity 
+        gltf-model="#Bullet" 
+        position="-24.75323 6.27562 -10.49316" 
+        rotation="0 0 180" 
+        material="color: #b2ffb2" 
+        scale="20 20 20">
+          
+      </a-entity>
+      <!-- Traînée verte transparente -->
+      <a-cylinder 
+        material="opacity: 0.3; blending: additive; color: #b2ffb2" 
+        geometry="height: 30" 
+        position="-28.1677 6.27853 -10.53481" 
+        rotation="90 0 90" 
+        scale="0.2 0.2 0.2">
+      </a-cylinder>
+      <!-- Directional Light 1 (principal) -->
+      <a-light 
+        type="directional" 
+        position="10 20 15" 
+        color="#ccffcc" 
+        intensity="1.2" 
+        castShadow="true" 
+        shadow-camera-near="0.5" 
+        shadow-camera-far="50" 
+        shadow-mapWidth="1024" 
+        shadow-mapHeight="1024">
+      </a-light>
+
+      <!-- Directional Light 2 (remplissage) -->
+      <a-light 
+        type="directional" 
+        position="-15 25 -10" 
+        color="#b2ffb2" 
+        intensity="0.8" 
+        castShadow="true">
+      </a-light>
+
+      <!-- Directional Light 3 (contre-jour dramatique) -->
+      <a-light 
+        type="directional" 
+        position="0 30 -20" 
+        color="#d9ffd9" 
+        intensity="1.0" 
+        castShadow="true">
+      </a-light>
+
+      <!-- Directional Light 4 (subtile ombrage latéral) -->
+      <a-light 
+        type="directional" 
+        position="15 10 5" 
+        color="#ccffcc" 
+        intensity="0.6">
+      </a-light>
+
+      <!-- Directional Light 5 (effet de remplissage doux) -->
+      <a-light 
+        type="directional" 
+        position="-10 15 10" 
+        color="#b2ffb2" 
+        intensity="0.5">
+      </a-light>
+    </a-scene>
+  </body>
+</html>
