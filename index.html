@@ -1,90 +1,58 @@
 <html>
   <head>
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.4/dist/aframe-extras.min.js"></script>
   </head>
   <body>
     <a-scene>
       <a-assets>
-        <a-asset-item id="Bullet" src="assets/Bullet.glb"></a-asset-item>
-        <a-asset-item id="city" src="assets/city.glb"></a-asset-item>
+        <a-asset-item id="moto" src="assets/moto.glb"></a-asset-item>
+        <a-asset-item id="fog" src="assets/fog.glb"></a-asset-item>
+        <a-asset-item id="road" src="assets/road.glb"></a-asset-item>
+
+
+
       </a-assets>
 
-      <!-- Ciel noire -->
-      <a-sky color="#000000"></a-sky>
-
       <!-- Caméra (libre pour explorer la scène) -->
-      <a-camera position="0 5 30" wasd-controls="true" look-controls="true"></a-camera>
-
-      <!-- Modèle de ville réduit -->
-      <a-entity 
-        gltf-model="#city" 
-        position="0 19 0" 
-        scale="18 18 18">
+      <a-entity id="rig" movement-controls position="0 3 120">
+        <a-entity
+          camera
+          position="0 1.6 0"
+          look-controls="pointerLockEnabled: true"
+          cursor="rayOrigin: mouse"
+        >
+        </a-entity>
+        <a-entity
+          oculus-touch-controls="hand: left"
+          laser-controls="hand: left"
+          raycaster="objects: .clickable; far: 10; showLine: true"
+        ></a-entity>
+        <a-entity
+          oculus-touch-controls="hand: right"
+          laser-controls="hand: right"
+          raycaster="objects: .clickable; far: 10; showLine: true"
+        ></a-entity>
       </a-entity>
 
-      <!-- Balle au centre de la ville -->
-      <a-entity 
-        gltf-model="#Bullet" 
-        position="-24.75323 6.27562 -10.49316" 
-        rotation="0 0 180" 
-        material="color: #b2ffb2" 
-        scale="20 20 20">
-          
+      
+      <!-- Moto positionnée pour le Akira Slide -->
+
+      <a-entity gltf-model="assets/moto.glb" position="0 0 93.474" scale="0.5 0.5 0.5" rotation="0 -90 0">
       </a-entity>
-      <!-- Traînée verte transparente -->
-      <a-cylinder 
-        material="opacity: 0.3; blending: additive; color: #b2ffb2" 
-        geometry="height: 30" 
-        position="-28.1677 6.27853 -10.53481" 
-        rotation="90 0 90" 
-        scale="0.2 0.2 0.2">
-      </a-cylinder>
-      <!-- Directional Light 1 (principal) -->
-      <a-light 
-        type="directional" 
-        position="10 20 15" 
-        color="#ccffcc" 
-        intensity="1.2" 
-        castShadow="true" 
-        shadow-camera-near="0.5" 
-        shadow-camera-far="50" 
-        shadow-mapWidth="1024" 
-        shadow-mapHeight="1024">
-      </a-light>
 
-      <!-- Directional Light 2 (remplissage) -->
-      <a-light 
-        type="directional" 
-        position="-15 25 -10" 
-        color="#b2ffb2" 
-        intensity="0.8" 
-        castShadow="true">
-      </a-light>
+     <!-- <a-entity gltf-model="#fog" position="2.52075 0 15.03106" scale="1 1 2">
+      </a-entity>
 
-      <!-- Directional Light 3 (contre-jour dramatique) -->
-      <a-light 
-        type="directional" 
-        position="0 30 -20" 
-        color="#d9ffd9" 
-        intensity="1.0" 
-        castShadow="true">
-      </a-light>
+      <a-entity gltf-model="#fog" position="12.21607 0.09648 8.05252" scale="1 1 1.2" rotation="">
+      </a-entity> -->
+      
+      <a-entity gltf-model="#road">
+      </a-entity>
+      
+      <a-sky src="/assets/akira.jpg" position="0 300 0" rotation="0 -70 0"></a-sky>
 
-      <!-- Directional Light 4 (subtile ombrage latéral) -->
-      <a-light 
-        type="directional" 
-        position="15 10 5" 
-        color="#ccffcc" 
-        intensity="0.6">
-      </a-light>
-
-      <!-- Directional Light 5 (effet de remplissage doux) -->
-      <a-light 
-        type="directional" 
-        position="-10 15 10" 
-        color="#b2ffb2" 
-        intensity="0.5">
-      </a-light>
-    </a-scene>
+      
   </body>
 </html>
