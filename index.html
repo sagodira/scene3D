@@ -10,9 +10,6 @@
         <a-asset-item id="moto" src="assets/moto.glb"></a-asset-item>
         <a-asset-item id="fog" src="assets/fog.glb"></a-asset-item>
         <a-asset-item id="road" src="assets/road.glb"></a-asset-item>
-
-
-
       </a-assets>
 
       <!-- Caméra (libre pour explorer la scène) -->
@@ -22,8 +19,7 @@
           position="0 1.6 0"
           look-controls="pointerLockEnabled: true"
           cursor="rayOrigin: mouse"
-        >
-        </a-entity>
+        ></a-entity>
         <a-entity
           oculus-touch-controls="hand: left"
           laser-controls="hand: left"
@@ -36,23 +32,45 @@
         ></a-entity>
       </a-entity>
 
-      
       <!-- Moto positionnée pour le Akira Slide -->
+      <a-entity
+        gltf-model="assets/moto.glb"
+        position="0 0 93.474"
+        scale="0.5 0.5 0.5"
+        rotation="0 -90 0"
+        class="clickable"
+        id="moto"
+      ></a-entity>
 
-      <a-entity gltf-model="assets/moto.glb" position="0 0 93.474" scale="0.5 0.5 0.5" rotation="0 -90 0">
-      </a-entity>
+      <a-entity gltf-model="#road"></a-entity>
 
-     <!-- <a-entity gltf-model="#fog" position="2.52075 0 15.03106" scale="1 1 2">
-      </a-entity>
-
-      <a-entity gltf-model="#fog" position="12.21607 0.09648 8.05252" scale="1 1 1.2" rotation="">
-      </a-entity> -->
-      
-      <a-entity gltf-model="#road">
-      </a-entity>
-      
       <a-sky src="/assets/akira.jpg" position="0 300 0" rotation="0 -70 0"></a-sky>
 
-      
+      <script>
+        // Ajouter un composant personnalisé pour monter sur la moto
+        AFRAME.registerComponent("ride-moto", {
+          init: function () {
+            const el = this.el; // Référence à l'élément (la moto)
+            const rig = document.querySelector("#rig"); // Référence au rig (caméra + contrôles)
+
+            el.addEventListener("click", function () {
+              // Repositionner le rig sur la moto
+              rig.setAttribute("position", {
+                x: 0,
+                y: 1.5, // Hauteur de la caméra par rapport à la moto
+                z: 93.474, // Position de la moto
+              });
+              // Optionnel : verrouiller le mouvement de la caméra une fois sur la moto
+              rig.removeAttribute("movement-controls");
+            });
+          },
+        });
+
+        // Appliquer le composant à la moto
+        document
+          .querySelector("#moto")
+          .setAttribute("ride-moto", ""); // Activer le script sur la moto
+      </script>
+    </a-scene>
   </body>
 </html>
