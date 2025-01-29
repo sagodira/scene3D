@@ -10,16 +10,19 @@
         <a-asset-item id="moto" src="assets/moto.glb"></a-asset-item>
         <a-asset-item id="fog" src="assets/fog.glb"></a-asset-item>
         <a-asset-item id="road" src="assets/road.glb"></a-asset-item>
+        <audio id="motoSound" src="assets/MotoSound.mp3"></audio>
       </a-assets>
 
       <!-- Caméra (libre pour explorer la scène) -->
       <a-entity id="rig" movement-controls position="0 3 120">
         <a-entity
+          id="camera"
           camera
           position="0 1.6 0"
           look-controls="pointerLockEnabled: true"
           cursor="rayOrigin: mouse"
-        ></a-entity>
+        >
+        </a-entity>
         <a-entity
           oculus-touch-controls="hand: left"
           laser-controls="hand: left"
@@ -33,44 +36,63 @@
       </a-entity>
 
       <!-- Moto positionnée pour le Akira Slide -->
-      <a-entity
-        gltf-model="assets/moto.glb"
-        position="0 0 93.474"
-        scale="0.5 0.5 0.5"
-        rotation="0 -90 0"
-        class="clickable"
-        id="moto"
-      ></a-entity>
+      <a-entity id="moto-entity" class="clickable" gltf-model="assets/moto.glb" position="0 0 90" scale="0.5 0.5 0.5" rotation="0 -90 0"></a-entity>
+
+      <!-- Texte initial au-dessus de la moto -->
+      <a-entity position="0 7 90">
+        <a-text 
+          id="instruction-text"
+          value="Moto en panne - Cliquez 3 fois pour réparer" 
+          align="center" 
+          color="white" 
+          width="20">
+        </a-text>
+      </a-entity>
 
       <a-entity gltf-model="#road"></a-entity>
-
+      
       <a-sky src="/assets/akira.jpg" position="0 300 0" rotation="0 -70 0"></a-sky>
-
-      <script>
-        // Ajouter un composant personnalisé pour monter sur la moto
-        AFRAME.registerComponent("ride-moto", {
-          init: function () {
-            const el = this.el; // Référence à l'élément (la moto)
-            const rig = document.querySelector("#rig"); // Référence au rig (caméra + contrôles)
-
-            el.addEventListener("click", function () {
-              // Repositionner le rig sur la moto
-              rig.setAttribute("position", {
-                x: 0,
-                y: 1.5, // Hauteur de la caméra par rapport à la moto
-                z: 93.474, // Position de la moto
-              });
-              // Optionnel : verrouiller le mouvement de la caméra une fois sur la moto
-              rig.removeAttribute("movement-controls");
-            });
-          },
-        });
-
-        // Appliquer le composant à la moto
-        document
-          .querySelector("#moto")
-          .setAttribute("ride-moto", ""); // Activer le script sur la moto
-      </script>
     </a-scene>
+
+    <script>
+      let clickCount = 0;
+      const motoEntity = document.querySelector('#moto-entity');
+      const instructionText = document.querySelector('#instruction-text');
+      const motoSound = document.querySelector('#motoSound');
+      const camera = document.querySelector('#camera');
+      const rig = document.querySelector('#rig');
+
+      // Nouvelle position où la caméra va se déplacer
+      const motoPosition = { x: 0, y: 1.6, z: 90 }; // Ajuster la position sur la moto
+
+      motoEntity.addEventListener('click', () => {
+        if (clickCount < 3) {
+          clickCount++;
+          instructionText.setAttribute('value', `Nombre de clics : ${clickCount}`);
+          motoSound.play();
+          
+          if (clickCount === 3) {
+            instructionText.setAttribute('value', "La moto démarre !");
+
+            // Animation pour déplacer la caméra vers la moto
+            rig.setAttribute('animation__position', {
+              property: 'position',
+              to: `${motoPosition.x} 2.7 ${motoPosition.z}`,
+              dur: 3000, // Durée de l'animation
+              easing: 'easeInOutQuad'
+            });
+
+
+            // Ajouter une petite animation de la moto
+            //motoEntity.setAttribute('animation', "property: position; to: 0 0 10; dur: 2200; easing: linear;");
+
+            // Eventuellement, vous pouvez ajouter un délai avant de réactiver les mouvements si nécessaire
+            // setTimeout(() => {
+            //   rig.setAttribute('movement-controls', 'enabled', 'true'); // Réactiver les contrôles
+            // }, 5000); // Après 5 secondes
+          }
+        }
+      });
+    </script>
   </body>
 </html>
