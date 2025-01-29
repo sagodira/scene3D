@@ -13,7 +13,6 @@
         <audio id="motoSound" src="assets/MotoSound.mp3"></audio>
       </a-assets>
 
-      <!-- Caméra (libre pour explorer la scène) -->
       <a-entity id="rig" movement-controls position="0 3 120">
         <a-entity
           id="camera"
@@ -23,22 +22,10 @@
           cursor="rayOrigin: mouse"
         >
         </a-entity>
-        <a-entity
-          oculus-touch-controls="hand: left"
-          laser-controls="hand: left"
-          raycaster="objects: .clickable; far: 10; showLine: true"
-        ></a-entity>
-        <a-entity
-          oculus-touch-controls="hand: right"
-          laser-controls="hand: right"
-          raycaster="objects: .clickable; far: 10; showLine: true"
-        ></a-entity>
       </a-entity>
 
-      <!-- Moto positionnée pour le Akira Slide -->
       <a-entity id="moto-entity" class="clickable" gltf-model="assets/moto.glb" position="0 0 90" scale="0.5 0.5 0.5" rotation="0 -90 0"></a-entity>
 
-      <!-- Texte initial au-dessus de la moto -->
       <a-entity position="0 7 90">
         <a-text 
           id="instruction-text"
@@ -49,8 +36,11 @@
         </a-text>
       </a-entity>
 
+      <a-entity id="start-button" geometry="primitive: plane; width: 2; height: 1" material="color: green" position="0 6.3 82" visible="false">
+        <a-text value="Démarrer la moto" align="center" position="0 0 0.1" color="white"></a-text>
+      </a-entity>
+
       <a-entity gltf-model="#road"></a-entity>
-      
       <a-sky src="/assets/akira.jpg" position="0 300 0" rotation="0 -70 0"></a-sky>
     </a-scene>
 
@@ -59,12 +49,11 @@
       const motoEntity = document.querySelector('#moto-entity');
       const instructionText = document.querySelector('#instruction-text');
       const motoSound = document.querySelector('#motoSound');
-      const camera = document.querySelector('#camera');
       const rig = document.querySelector('#rig');
+      const startButton = document.querySelector('#start-button');
 
-      // Nouvelle position où la caméra va se déplacer
-      const motoPosition = { x: 0, y: 1.6, z: 90 }; // Ajuster la position sur la moto
-      let isOnMoto = false;  // Suivre si l'utilisateur est sur la moto
+      const motoPosition = { x: 0, y: 2.7, z: 90 };
+      let isOnMoto = false;
 
       motoEntity.addEventListener('click', () => {
         if (clickCount < 3) {
@@ -75,21 +64,72 @@
           if (clickCount === 3) {
             instructionText.setAttribute('value', "La moto démarre !");
 
-            // Animation pour déplacer la caméra vers la moto
             rig.setAttribute('animation__position', {
               property: 'position',
-              to: `${motoPosition.x} 2.7 ${motoPosition.z}`,
-              dur: 3000, // Durée de l'animation
+              to: `${motoPosition.x} ${motoPosition.y} ${motoPosition.z}`,
+              dur: 3000,
               easing: 'easeInOutQuad'
             });
 
-            // Désactiver les déplacements une fois sur la moto
             setTimeout(() => {
               isOnMoto = true;
-              rig.removeAttribute('movement-controls'); // Désactive les déplacements
-            }, 3000);  // Le temps de l'animation (ajustez si nécessaire)
+              rig.removeAttribute('movement-controls');
+              startButton.setAttribute('visible', true);
+            }, 3000);
           }
         }
+      });
+
+      startButton.addEventListener('click', () => {
+        instructionText.setAttribute('value', "L'Akira Slide commence!");
+
+        // 1️⃣ Phase 1 : Accélération jusqu'à 60m
+        motoEntity.setAttribute('animation__phase1', {
+          property: "position",
+          to: "0 0 30",  // Moto avance en ligne droite jusqu'à 60m
+          dur: 1500,  // Rapidement en 1.5s
+          easing: "linear"
+        });
+
+        rig.setAttribute('animation__phase1', {
+          property: "position",
+          to: "0 2.7 30",
+          dur: 1500,
+          easing: "linear"
+        });
+
+        // 2️⃣ Phase 2 : Début du dérapage (60m → 80m)
+        setTimeout(() => {
+          motoEntity.setAttribute('animation__phase2', {
+            property: "position",
+            to: "0 0 40",  // Continue jusqu'à 80m
+            dur: 2500,  // Plus lent pour créer l'effet de freinage
+            easing: "easeOutQuad"  // Décélération progressive
+          });
+
+          rig.setAttribute('animation__phase2', {
+            property: "position",
+            to: "0 2.7 40",
+            dur: 2500,
+            easing: "easeOutQuad"
+          });
+
+          // Moto commence à s'incliner vers 60m
+          motoEntity.setAttribute('animation__rotation', {
+            property: "rotation",
+            to: "30 0 0",
+            dur: 1000,
+            easing: "easeOutCubic"
+          });
+
+          rig.setAttribute('animation__rotation', {
+            property: "rotation",
+            to: "30 0 0",
+            dur: 1000,
+            easing: "easeOutCubic"
+          });
+
+        }, 1500);  // Lance cette phase après la course rapide
       });
     </script>
   </body>
