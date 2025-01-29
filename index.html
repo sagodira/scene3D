@@ -42,9 +42,15 @@
         <a-text id="instruction-text" value="Moto en panne - Cliquez 3 fois pour réparer" align="center" color="white" width="20"></a-text>
       </a-entity>
 
-      <a-entity id="start-button" geometry="primitive: plane; width: 2; height: 1" material="color: green" position="0 6.3 82" visible="false">
-        <a-text value="Démarrer la moto" align="center" position="0 0 0.1" color="white"></a-text>
-      </a-entity>
+      <a-entity id="start-button" class="clickable" 
+      geometry="primitive: plane; width: 2; height: 1" 
+      material="color: green" 
+      position="0 5.3176 85.50793"
+      visible="false">
+<a-text value="Démarrer la moto" align="center" position="0 0 0.1" color="white"></a-text>
+</a-entity>
+
+
 
       <a-entity gltf-model="#road"></a-entity>
       <a-sky src="./assets/akira.jpg" position="0 300 0" rotation="0 -70 0"></a-sky>
@@ -89,56 +95,66 @@
       });
 
       // Bouton pour démarrer l'animation Akira Slide
-      startButton.addEventListener("click", () => {
-        instructionText.setAttribute("value", "L'Akira Slide commence!");
+      startButton.addEventListener("click", startAkiraSlide);
+startButton.addEventListener("mouseenter", () => {
+  startButton.setAttribute("material", "color", "lime");
+});
+startButton.addEventListener("mouseleave", () => {
+  startButton.setAttribute("material", "color", "green");
+});
 
-        // 🚀 Phase 1 : Accélération jusqu'à 60m
-        motoEntity.setAttribute("animation__phase1", {
-          property: "position",
-          to: "0 0 30",
-          dur: 1500,
-          easing: "linear",
-        });
+function startAkiraSlide() {
+  instructionText.setAttribute("value", "L'Akira Slide commence!");
+  startButton.setAttribute("visible", false);
 
-        rig.setAttribute("animation__phase1", {
-          property: "position",
-          to: "0 2.7 30",
-          dur: 1500,
-          easing: "linear",
-        });
+  // 🚀 Phase 1 : Accélération jusqu'à 60m
+  motoEntity.setAttribute("animation__phase1", {
+    property: "position",
+    to: "0 0 30",
+    dur: 1500,
+    easing: "linear",
+  });
 
-        // 🏍 Phase 2 : Début du dérapage (60m → 80m)
-        setTimeout(() => {
-          motoEntity.setAttribute("animation__phase2", {
-            property: "position",
-            to: "0 0 40",
-            dur: 2500,
-            easing: "easeOutQuad",
-          });
+  rig.setAttribute("animation__phase1", {
+    property: "position",
+    to: "0 2.7 30",
+    dur: 1500,
+    easing: "linear",
+  });
 
-          rig.setAttribute("animation__phase2", {
-            property: "position",
-            to: "0 2.7 40",
-            dur: 2500,
-            easing: "easeOutQuad",
-          });
+  // 🏍 Phase 2 : Dérapage (60m → 80m)
+  setTimeout(() => {
+    motoEntity.setAttribute("animation__phase2", {
+      property: "position",
+      to: "0 0 40",
+      dur: 2500,
+      easing: "easeOutQuad",
+    });
 
-          // Moto commence à s'incliner
-          motoEntity.setAttribute("animation__rotation", {
-            property: "rotation",
-            to: "30 0 0",
-            dur: 1000,
-            easing: "easeOutCubic",
-          });
+    rig.setAttribute("animation__phase2", {
+      property: "position",
+      to: "0 2.7 40",
+      dur: 2500,
+      easing: "easeOutQuad",
+    });
 
-          rig.setAttribute("animation__rotation", {
-            property: "rotation",
-            to: "30 0 0",
-            dur: 1000,
-            easing: "easeOutCubic",
-          });
-        }, 1500);
-      });
+    // Moto commence à s'incliner
+    motoEntity.setAttribute("animation__rotation", {
+      property: "rotation",
+      to: "30 0 0",
+      dur: 1000,
+      easing: "easeOutCubic",
+    });
+
+    rig.setAttribute("animation__rotation", {
+      property: "rotation",
+      to: "30 0 0",
+      dur: 1000,
+      easing: "easeOutCubic",
+    });
+  }, 1500);
+}
+
     </script>
   </body>
 </html>
