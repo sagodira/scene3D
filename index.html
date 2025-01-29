@@ -8,10 +8,12 @@
     <a-scene>
       <a-assets>
         <a-asset-item id="moto" src="assets/moto.glb"></a-asset-item>
+        <a-asset-item id="fog" src="assets/fog.glb"></a-asset-item>
+        <a-asset-item id="road" src="assets/road.glb"></a-asset-item>
         <audio id="motoSound" src="assets/MotoSound.mp3"></audio>
       </a-assets>
 
-      <!-- Rig + Caméra + Contrôles VR -->
+      <!-- Rig avec caméra et contrôles VR -->
       <a-entity id="rig" movement-controls position="0 3 120">
         <a-entity
           id="camera"
@@ -19,13 +21,14 @@
           position="0 1.6 0"
           look-controls="pointerLockEnabled: true"
           cursor="rayOrigin: mouse"
-        >
-        </a-entity>
+        ></a-entity>
+
         <a-entity
           oculus-touch-controls="hand: left"
           laser-controls="hand: left"
           raycaster="objects: .clickable; far: 10; showLine: true"
         ></a-entity>
+
         <a-entity
           oculus-touch-controls="hand: right"
           laser-controls="hand: right"
@@ -33,114 +36,108 @@
         ></a-entity>
       </a-entity>
 
-      <a-entity id="moto-entity" class="clickable" gltf-model="assets/moto.glb" position="0 0 90" scale="0.5 0.5 0.5" rotation="0 -90 0"></a-entity>
+      <a-entity id="moto-entity" class="clickable" gltf-model="#moto" position="0 0 90" scale="0.5 0.5 0.5" rotation="0 -90 0"></a-entity>
 
       <a-entity position="0 7 90">
-        <a-text 
-          id="instruction-text"
-          value="Moto en panne - Cliquez 3 fois pour réparer" 
-          align="center" 
-          color="white" 
-          width="20">
-        </a-text>
+        <a-text id="instruction-text" value="Moto en panne - Cliquez 3 fois pour réparer" align="center" color="white" width="20"></a-text>
       </a-entity>
 
       <a-entity id="start-button" geometry="primitive: plane; width: 2; height: 1" material="color: green" position="0 6.3 82" visible="false">
         <a-text value="Démarrer la moto" align="center" position="0 0 0.1" color="white"></a-text>
       </a-entity>
 
+      <a-entity gltf-model="#road"></a-entity>
       <a-sky src="./assets/akira.jpg" position="0 300 0" rotation="0 -70 0"></a-sky>
     </a-scene>
 
     <script>
       let clickCount = 0;
-      const motoEntity = document.querySelector('#moto-entity');
-      const instructionText = document.querySelector('#instruction-text');
-      const motoSound = document.querySelector('#motoSound');
-      const rig = document.querySelector('#rig');
-      const startButton = document.querySelector('#start-button');
+      const motoEntity = document.querySelector("#moto-entity");
+      const instructionText = document.querySelector("#instruction-text");
+      const motoSound = document.querySelector("#motoSound");
+      const rig = document.querySelector("#rig");
+      const startButton = document.querySelector("#start-button");
 
       const motoPosition = { x: 0, y: 2.7, z: 90 };
       let isOnMoto = false;
 
       // Clic pour réparer la moto
-      motoEntity.addEventListener('click', () => {
+      motoEntity.addEventListener("click", () => {
         if (clickCount < 3) {
           clickCount++;
-          instructionText.setAttribute('value', `Nombre de clics : ${clickCount}`);
+          instructionText.setAttribute("value", `Nombre de clics : ${clickCount}`);
           motoSound.play();
-          
-          if (clickCount === 3) {
-            instructionText.setAttribute('value', "La moto démarre !");
 
-            // Animation : le joueur monte sur la moto
-            rig.setAttribute('animation__position', {
-              property: 'position',
+          if (clickCount === 3) {
+            instructionText.setAttribute("value", "La moto démarre !");
+
+            // Le joueur monte sur la moto
+            rig.setAttribute("animation__position", {
+              property: "position",
               to: `${motoPosition.x} ${motoPosition.y} ${motoPosition.z}`,
               dur: 3000,
-              easing: 'easeInOutQuad'
+              easing: "easeInOutQuad",
             });
 
             setTimeout(() => {
               isOnMoto = true;
-              rig.removeAttribute('movement-controls');
-              startButton.setAttribute('visible', true);
+              rig.removeAttribute("movement-controls");
+              startButton.setAttribute("visible", true);
             }, 3000);
           }
         }
       });
 
       // Bouton pour démarrer l'animation Akira Slide
-      startButton.addEventListener('click', () => {
-        instructionText.setAttribute('value', "L'Akira Slide commence!");
+      startButton.addEventListener("click", () => {
+        instructionText.setAttribute("value", "L'Akira Slide commence!");
 
-        // 1️⃣ Phase 1 : Accélération jusqu'à 60m
-        motoEntity.setAttribute('animation__phase1', {
+        // 🚀 Phase 1 : Accélération jusqu'à 60m
+        motoEntity.setAttribute("animation__phase1", {
           property: "position",
           to: "0 0 30",
           dur: 1500,
-          easing: "linear"
+          easing: "linear",
         });
 
-        rig.setAttribute('animation__phase1', {
+        rig.setAttribute("animation__phase1", {
           property: "position",
           to: "0 2.7 30",
           dur: 1500,
-          easing: "linear"
+          easing: "linear",
         });
 
-        // 2️⃣ Phase 2 : Début du dérapage (60m → 80m)
+        // 🏍 Phase 2 : Début du dérapage (60m → 80m)
         setTimeout(() => {
-          motoEntity.setAttribute('animation__phase2', {
+          motoEntity.setAttribute("animation__phase2", {
             property: "position",
             to: "0 0 40",
             dur: 2500,
-            easing: "easeOutQuad"
+            easing: "easeOutQuad",
           });
 
-          rig.setAttribute('animation__phase2', {
+          rig.setAttribute("animation__phase2", {
             property: "position",
             to: "0 2.7 40",
             dur: 2500,
-            easing: "easeOutQuad"
+            easing: "easeOutQuad",
           });
 
-          // Moto commence à s'incliner à 60m
-          motoEntity.setAttribute('animation__rotation', {
+          // Moto commence à s'incliner
+          motoEntity.setAttribute("animation__rotation", {
             property: "rotation",
             to: "30 0 0",
             dur: 1000,
-            easing: "easeOutCubic"
+            easing: "easeOutCubic",
           });
 
-          rig.setAttribute('animation__rotation', {
+          rig.setAttribute("animation__rotation", {
             property: "rotation",
             to: "30 0 0",
             dur: 1000,
-            easing: "easeOutCubic"
+            easing: "easeOutCubic",
           });
-
-        }, 1500);  // Lance cette phase après la course rapide
+        }, 1500);
       });
     </script>
   </body>
