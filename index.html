@@ -64,6 +64,7 @@
 
       // Nouvelle position où la caméra va se déplacer
       const motoPosition = { x: 0, y: 1.6, z: 90 }; // Ajuster la position sur la moto
+      let isOnMoto = false;  // Suivre si l'utilisateur est sur la moto
 
       motoEntity.addEventListener('click', () => {
         if (clickCount < 3) {
@@ -82,14 +83,11 @@
               easing: 'easeInOutQuad'
             });
 
-
-            // Ajouter une petite animation de la moto
-            //motoEntity.setAttribute('animation', "property: position; to: 0 0 10; dur: 2200; easing: linear;");
-
-            // Eventuellement, vous pouvez ajouter un délai avant de réactiver les mouvements si nécessaire
-            // setTimeout(() => {
-            //   rig.setAttribute('movement-controls', 'enabled', 'true'); // Réactiver les contrôles
-            // }, 5000); // Après 5 secondes
+            // Désactiver les déplacements une fois sur la moto
+            setTimeout(() => {
+              isOnMoto = true;
+              rig.removeAttribute('movement-controls'); // Désactive les déplacements
+            }, 3000);  // Le temps de l'animation (ajustez si nécessaire)
           }
         }
       });
