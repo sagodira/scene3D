@@ -20,6 +20,7 @@
 
 
         <audio id="motoSound" src="assets/MotoSound.mp3"></audio>
+        <audio id="roule" src="assets/motoroule.mp3"></audio>
         
       </a-assets>
       <audio id="bgMusic" src="assets/ambiance.mp3" loop></audio>
@@ -96,21 +97,22 @@
       </a-entity>
 
       <a-entity position="0 7 90">
-        <a-text id="instruction-text" value="Cliquez 3 fois pour demmarrer" align="center" color="white" width="20"></a-text>
+        <a-text id="instruction-text" value="Cliquez 3 fois pour demarrer" align="center" color="white" width="20"></a-text>
       </a-entity>
 
       <a-entity id="start-button" class="clickable"
                 geometry="primitive: plane; width: 2; height: 1"
-                material="color: green"
-                position="0 5.3176 85.50793"
-                visible="false">
-        <a-text value="Démarrer la moto" align="center" position="0 0 0.1" color="white"></a-text>
+                material="color: red"
+                position="0 7.31114 85.508"
+                visible="false"
+                scale="2 2 2">
+                
+        <a-text value="Demarrer la moto" align="center" position="0 0 0.1" color="white"></a-text>
       </a-entity>
 
       <a-entity gltf-model="#road"></a-entity>
       <a-sky src="./assets/akira.jpg" position="0 300 0" rotation="0 -70 0"></a-sky>
     </a-scene>
-
 
 
     
@@ -152,7 +154,7 @@ window.addEventListener("load", () => {
       motoEntity.addEventListener("click", () => {
         if (clickCount < 3) {
           clickCount++;
-          instructionText.setAttribute("value", `Nombre de clics : ${clickCount}`);
+          instructionText.setAttribute("value", `${clickCount}`);
           motoSound.play();
 
           if (clickCount === 3) {
@@ -178,10 +180,10 @@ window.addEventListener("load", () => {
       // Bouton pour démarrer l'animation Akira Slide
       startButton.addEventListener("click", startAkiraSlide);
       startButton.addEventListener("mouseenter", () => {
-        startButton.setAttribute("material", "color", "lime");
+        startButton.setAttribute("material", "color", "orange");
       });
       startButton.addEventListener("mouseleave", () => {
-        startButton.setAttribute("material", "color", "green");
+        startButton.setAttribute("material", "color", "red");
       });
 
       function startAkiraSlide() {
@@ -224,14 +226,14 @@ window.addEventListener("load", () => {
     // 🔥 Phase 3 : Nouvelle course de 30m sur Z après la rotation
     motoContainer.setAttribute("animation__phase3", {
       property: "position",
-      to: "0 0 -60", // Départ de z=20 → arrivée à z=-10 (continue sur Z)
+      to: "0 0 -71", // Départ de z=20 → arrivée à z=-10 (continue sur Z)
       dur: 4000,
       easing: "easeInOutQuad",
     });
 
     rig.setAttribute("animation__phase3", {
       property: "position",
-      to: "5 3.5 -59", // La caméra garde le même léger décalage pour rester cohérente
+      to: "5 3.5 -70", // La caméra garde le même léger décalage pour rester cohérente
       dur: 4000,
       easing: "easeInOutQuad",
     });
