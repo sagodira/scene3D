@@ -20,10 +20,11 @@
 
 
         <audio id="motoSound" src="assets/MotoSound.mp3"></audio>
+        
       </a-assets>
-
+      <audio id="bgMusic" src="assets/ambiance.mp3" loop></audio>
       <!-- Rig avec caméra et contrôles VR -->
-      <a-entity id="rig" movement-controls position="0 3 120">
+      <a-entity id="rig" movement-controls position="10 3 100">
         <a-entity
           id="camera"
           camera
@@ -95,7 +96,7 @@
       </a-entity>
 
       <a-entity position="0 7 90">
-        <a-text id="instruction-text" value="Cliquez 3 fois pour demmarer" align="center" color="white" width="20"></a-text>
+        <a-text id="instruction-text" value="Cliquez 3 fois pour demmarrer" align="center" color="white" width="20"></a-text>
       </a-entity>
 
       <a-entity id="start-button" class="clickable"
@@ -110,6 +111,9 @@
       <a-sky src="./assets/akira.jpg" position="0 300 0" rotation="0 -70 0"></a-sky>
     </a-scene>
 
+
+
+    
     <script>
       let clickCount = 0;
       const motoContainer = document.querySelector("#moto-container");
@@ -121,6 +125,28 @@
 
       const motoPosition = { x: 0, y: 3.5, z: 93 };
       let isOnMoto = false;
+
+// Lancement musique
+window.addEventListener("load", () => {
+  const bgMusic = document.querySelector("#bgMusic");
+
+  const startMusic = () => {
+    bgMusic.play().then(() => {
+      console.log("Musique lancée !");
+    }).catch(error => {
+      console.log("Lecture automatique bloquée :", error);
+    });
+
+    // On enlève l'écouteur après la première interaction
+    window.removeEventListener("click", startMusic);
+    window.removeEventListener("keydown", startMusic);
+  };
+
+  // Attendre un clic ou une touche pour démarrer la musique
+  window.addEventListener("click", startMusic);
+  window.addEventListener("keydown", startMusic);
+});
+
 
       // Clic pour réparer la moto
       motoEntity.addEventListener("click", () => {
